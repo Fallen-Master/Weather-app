@@ -11,44 +11,56 @@
         <link rel="stylesheet" href="./Assets/styl.css">
     </head>
 
-    <body>
-        <header>
-            <h1>Weather Dashboard</h1>
+    <body class="">
+        <header class="has-text-centered has-background-info is-fluid ">
+            <h1 class="m-0 is-size-1">Weather Dashboard</h1>
         </header>
 
-        <main>
-            <div class="current-city">
-                <h2 id="city-name date" > </h2>
-                <ul>
-                    <li id="Temp"></li>
-                    <li id="wind"></li>
-                    <li id="humidity"></li>
-                </ul>
-            </div>
-            <div class="five-day">
-                <h3>5-Day Forecast:</h3>
-                <ul>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                </ul>
+        <div class="columns is-vcentered">
 
-            </div>
-            <aside>
-                <form>
-                <label for="city">Search for a City:</label>
-                <input type="text" id="city-search" name="city-search">
-                <input type="submit" value="submit">
+            <div class="column is-2  ">
+                <div class="column">
+                <form >
+                <div class="title my-1	" for="city">Search for a City:</div>
+                <input class="input is-rounded my-1	 " type="text" placeholder="City Name">
+                <button class="button is-fullwidth my-1	is-link" id="search-city">Search</button>
+                    <div>
+                        <ul>
+                            <li>History 1</li>
+                            <li>History 2</li>
+                            <li>History 3</li>
+                        </ul>
+                    </div>
                 </form>
+                <button class="button is-fullwidth is-danger">Clear history</button>
+                </div>
+            </div>
 
-            </aside>
+            <div class=" column current-city">
+                <div class="column box">
+                <div class="title" id="city-name date">CITY</div>
+                <ul>
+                    <li id="Temp" class="my-1"> TEMP</li>
+                    <li id="wind" class="my-1">WIND</li>
+                    <li id="humidity" class="my-1">HUMIDITY</li>
+                </ul>
+                </div>
+            
+            <div class="column  card box five-day">
+                <h3 class="title">5-Day Forecast:</h3>
+                <div>
+                    <ul class="is-inline card day-one">
+                        <li class="is-inline  ">1</li>
+                    </ul>
+                </div>
+            </div>
+            </div>
+            
 
-            <button class="btn btn-danger" id="fetch-button">
-                Click Me
-              </button>
-        </main>
+          
+        </div>
+
+        
         <footer>
 
         </footer>
