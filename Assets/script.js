@@ -86,14 +86,50 @@ fetch(urlFiveDay)
   if (!response.ok) throw new Error(response.statusText)
    return response.json();
 })
-  .then (data => {
-  console.log(data) 
-     showFiveDay(data)
-   console.log(data) 
+  .then (function (data) {
+     filterByTime(data)
   })
 }
 
-function showFiveDay(data){
+function filterByTime(data){
+  var filteredData = [];
+  for (let i = 0; i < data.list.length; i++) {
+    var dt_txt = data.list[i].dt_txt;  // this should be a string like "2023-07-30 12:00:00"
+    var dtTime = dt_txt.split(" ")[1];  // split the string at the space and take the second part
+    if (dtTime === "12:00:00"){
+      filteredData.push(data.list[i]);
+    }
+  }
+  console.log(filteredData);
+  makeFiveDayCard(filteredData)
+  return filteredData;
+}
+
+function makeFiveDayCard(filteredData){
+  for (let i = 0; i <filteredData.length; i++){
+    var date = new Date(filteredData[i].dt * 1000)
+    var icon = filteredData[i].weather[0].icon
+    var temp =  filteredData[i].main.temp
+    var wind = filteredData[i].wind.speed
+    var humidity = filteredData[i].main.humidity
+
+    var newCard = document.createElement("div")
+    newCard.setAttribute("class", "card column")
+    newCard.innerHTML=`
+    <div class="card-content">
+            <h4 class = "card-header-title" >Date:${date.toDateString()}</h4>
+             <img src=" https://openweathermap.org/img/wn/${icon}@2x.png"
+             alt="Placeholder image"
+             class="image ">
+             <p class="content">TEMP: ${temp}</p>
+             <p class="content">WIND: ${wind}MPH</p>
+             <p class="content">HUMIDITY: ${humidity}</p>
+    </div>`
+    
+ document.getElementById("container-five-day").appendChild(newCard)
+  }
+
+
   
 }
 
@@ -107,68 +143,3 @@ window.onload = function() {
     ul.appendChild(li);
   }
 };
-
-// var citySearchSubmit = function (event){
-//   event.preventDefault()
-//   var location = document.getElementById('city-input').value;
-// }
-// document.getElementById('search-city').addEventListener( 'click', citySearchSubmit )
-
-
-
-// .addEventListener('click', function(event) {
-//     event.preventDefault();
-   
-//     document.querySelector('input').value =''
-//     console.log(cityName)
-    
-    
-//     .then((response) =>{
-//         if (!response.ok) throw new Error(response.statusText)
-//         return response.json();
-//     })
-//     .then(data => {
-        
-      
-//     })
-
-//       .catch((error)=> console.log(error))
-    
-// })
-
- 
-
- 
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-// var fetchButton = document.getElementById('fetch-button');
-
-
-// function getApi(){
-//     let requestUrl = 'http://api.openweathermap.org/data/2.5/forecast?id=524901&appid=2f23027a9f86d417da7e31e6ab9ea170'
-
-//     fetch(requestUrl)
-//     .then(function (response) {
-//         return response.json()
-//         console.log(response)
-//     })
-//     .then (function (data){
-//         console.log(data)
-//     })
-// }
-// fetchButton.addEventListener('click', getApi);
