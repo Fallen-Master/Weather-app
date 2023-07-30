@@ -2,11 +2,9 @@ var key = '2f23027a9f86d417da7e31e6ab9ea170'
 var units = 'imperial'
 var lang = 'en' 
 
+var clearHistoryButton = document.getElementById('clear-history')
 var searchButton = document.getElementById('search-city');
-
 searchButton.addEventListener('click', inputEventHandler);
-
-
 
 function inputEventHandler(event) {
   event.preventDefault()
@@ -17,16 +15,45 @@ function inputEventHandler(event) {
   else {
     var ul = document.querySelector("ul");
     var li = document.createElement("li");
+    li.setAttribute ("class", "button is-info box my-1")
     li.textContent = cityName;
-    ul.appendChild(li); 
+    ul.appendChild(li);
+    li.addEventListener("click", function(){
+      geoLocation(this.textContent)
+    })
     
     var cityHistory = JSON.parse(localStorage.getItem("cityHistory")) || [];
+    if(!cityHistory.includes(cityName)){
     cityHistory.push(cityName);
     localStorage.setItem("cityHistory", JSON.stringify(cityHistory));
-
+  }};
     geoLocation(cityName);
-  };
+  
 }
+
+window.onload = function() {
+  var cityHistory = JSON.parse(localStorage.getItem("cityHistory")) || [];
+  var ul = document.querySelector("ul");
+
+  for(var i = 0; i < cityHistory.length; i++) {
+    var li = document.createElement("li");
+    li.setAttribute ("class", "button is-info box my-1")
+    li.textContent = cityHistory[i];
+    ul.appendChild(li);
+    li.addEventListener("click", function(){
+      geoLocation(this.textContent)
+    })
+  }
+};
+
+clearHistoryButton.addEventListener('click', function(){
+
+  localStorage.removeItem('cityHistory');
+  var ul = document.querySelector("ul");
+  while(ul.firstChild){
+    ul.removeChild(ul.firstChild)
+  }  
+})
 
 function geoLocation(cityName){
   var geoLocationRequest = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=${key}`;
@@ -94,8 +121,8 @@ fetch(urlFiveDay)
 function filterByTime(data){
   var filteredData = [];
   for (let i = 0; i < data.list.length; i++) {
-    var dt_txt = data.list[i].dt_txt;  // this should be a string like "2023-07-30 12:00:00"
-    var dtTime = dt_txt.split(" ")[1];  // split the string at the space and take the second part
+    var dt_txt = data.list[i].dt_txt;  
+    var dtTime = dt_txt.split(" ")[1];  
     if (dtTime === "12:00:00"){
       filteredData.push(data.list[i]);
     }
@@ -106,6 +133,10 @@ function filterByTime(data){
 }
 
 function makeFiveDayCard(filteredData){
+  var container = document.getElementById("container-five-day")
+  while (container.firstChild) {
+    container.firstChild.remove();
+  }
   for (let i = 0; i <filteredData.length; i++){
     var date = new Date(filteredData[i].dt * 1000)
     var icon = filteredData[i].weather[0].icon
@@ -117,7 +148,7 @@ function makeFiveDayCard(filteredData){
     newCard.setAttribute("class", "card column")
     newCard.innerHTML=`
     <div class="card-content">
-            <h4 class = "card-header-title" >Date:${date.toDateString()}</h4>
+            <h4 class = "card-header-title is-size-4" >${date.toDateString()}</h4>
              <img src=" https://openweathermap.org/img/wn/${icon}@2x.png"
              alt="Placeholder image"
              class="image ">
@@ -125,21 +156,6 @@ function makeFiveDayCard(filteredData){
              <p class="content">WIND: ${wind}MPH</p>
              <p class="content">HUMIDITY: ${humidity}</p>
     </div>`
-    
- document.getElementById("container-five-day").appendChild(newCard)
+  container.appendChild(newCard)
   }
-
-
-  
 }
-
-window.onload = function() {
-  var cityHistory = JSON.parse(localStorage.getItem("cityHistory")) || [];
-  var ul = document.querySelector("ul");
-
-  for(var i = 0; i < cityHistory.length; i++) {
-    var li = document.createElement("li");
-    li.textContent = cityHistory[i];
-    ul.appendChild(li);
-  }
-};
